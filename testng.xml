@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" preserve-order="true" name="/home/arghas/trello assignment selenium">
+        <classes>
+            <class name="TrelloTestCases.AssessmentTaskWithPOM">
+                <methods>
+                    <include name="createBoard"/>
+                    <include name="createList"/>
+                    <include name="createCard"/>
+                    <include name="moveCard"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
