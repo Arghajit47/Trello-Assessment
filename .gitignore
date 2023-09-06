@@ -1,3 +1,5 @@
 node_modules
 cypress/Report
 package-lock.json
+cypress/fixtures/*
+cypress/integration/APITesting.spec.js

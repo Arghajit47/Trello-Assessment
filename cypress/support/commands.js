@@ -23,3 +23,15 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import '@4tw/cypress-drag-drop';
+// Cypress.Commands.add('dragTo', {prevSubject: 'element'}, (subject, targetXPath) => {
+//     cy.wrap(subject)
+//       .trigger('mousedown', { which: 1 })
+//       .trigger('mousemove', { which: 1, pageX: 600, pageY: 600 })
+//       .trigger('mouseup');
+
+//     cy.xpath(targetXPath)
+//       .trigger('mousemove', { which: 1, pageX: 600, pageY: 600 })
+//       .trigger('mouseup', { force: true });
+// });
+

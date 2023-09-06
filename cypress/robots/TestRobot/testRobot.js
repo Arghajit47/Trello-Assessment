@@ -26,6 +26,7 @@ export class TestEyes extends BaseEyes {
     this.seesDomContainText('ul > li > a', "Can't log in?");
   }
   seesTrelloHomePage() {
+    cy.visit('/', {timeout: 120000});
     const navbarList = ["Back to home", "Workspaces", "Recent boards", "Starred boards", "Templates", "Create board or Workspace", "Open member menu"]
     for (var i = 0; i < 7; i++) {
         this.seesDomVisible(`[aria-label="${navbarList[i]}"]`);
@@ -34,19 +35,20 @@ export class TestEyes extends BaseEyes {
     this.seesDomVisible('li[data-testid="create-board-tile"]');
     this.seesDomContainText('div > h3', "YOUR WORKSPACES");
   }
-  seesAllCreateOptions() {
-    const options = ["Create board", "Start with a template", "Create Workspace"];
-
-    for(var i = 0; i < 3; i++) {
-        this.seesDomContainText('ul > li > button > span', options[i]);
-    }
+  seesCreateNewBoard() {
+    this.seesDomVisible('[data-testid="create-board-tile"]');
   }
-  seesBoard() {
-    this.seesDomVisible('div [data-testid="list-composer-button"]')
+  seesBoardTitleInputField() {
+    this.seesDomVisible("input[data-testid='create-board-title-input']");
   }
-  seesCardLocation () {
-    this.seesLocationOfDomElement('div > a[data-testid="trello-card"]');
+  seesCreateButton() {
+    this.seesDomVisible("button[data-testid='create-board-submit-button']");
+    cy.wait(5000);
   }
+  seesBoard(name) {
+    this.seesDomElementWithXpath(`//a[.='${name}']`)
+  }
+  
 }
 export class TestHands extends BaseHands {
   clickOnLoginButton() {
@@ -60,90 +62,94 @@ export class TestHands extends BaseHands {
   }
   typeUserMail() {
     this.typeTextonDom('input[id="user"]', userEmail);
-    this.wait(5000);
+    
   }
   clickOnContinueButton() {
     this.clickOnDomElement('input[id="login"]');
-    this.wait(6000);
+    
   }
   typePassword() {
     this.typeTextonDom('input[id="password"]', password);
-    this.wait(5000);
+    
   }
   clickOnLoginSubmitButton() {
     this.clickOnDomElement('button[id="login-submit"]');
-    this.wait(10000);
+    cy.wait(8000);
   }
-  clickOnCreateBoardButton() {
-    this.clickOnDomElement('button[aria-label="Create board or Workspace"]');
-    this.wait(2000);
+  clickOnCreateNewBoard() {
+    cy.wait(6000);
+    this.clickOnDomElementWithXpath("//span[text()='Create new board']")
   }
-  typeBoardName() {
-    this.typeTextonDom('section [data-testid="create-board-title-input"]', "New Board");
-    this.wait(1000);
+  typeTextOnBoardTitle(name) {
+    this.typeTextonDom("input[data-testid='create-board-title-input']", name);
   }
   clickOnCreateButton() {
-    this.clickOnDomElement('[data-testid="create-board-submit-button"]');
-    this.wait(5000);
+    this.clickOnDomElement("button[data-testid='create-board-submit-button']");
+    cy.wait(5000);
   }
-  clickOnCreateBoardOption() {
-    this.clickOnDomContainText('ul > li > button > span', 'Create board');
-    this.wait(1000);
-  }
-  clickOnCreateNewList() {
-    this.clickOnDomElement('div [data-testid="list-composer-button"]');
-    this.wait(1000);
-  }
-  typeNewListName(name) {
-    this.typeTextonDom('input[name="name"]', name);
-    this.wait(1000);
+  setListTitle(title) {
+    this.typeTextonDom(".list-name-input", title);
   }
   clickOnAddListButton() {
-    this.clickOnDomElement('input[value="Add list"]');
-    this.wait(1000);
-  }
-  clickOnCrossIcon() {
-    this.clickOnDomElement('[aria-label="Cancel list editing"]');
-    this.wait(1000);
+    this.clickOnDomElement("#board input[value='Add list']");
+    cy.wait(2000);
   }
   clickOnAddCard() {
-    this.clickOnDomElementWithIndex('[data-testid="list-add-card-button"]', 3);
-    this.wait(1000);
+    this.clickOnDomElementWithIndex("#board a[class='open-card-composer js-open-card-composer']", 0);
   }
-  typeCardName() {
-    this.typeTextonDom('[data-testid="list-card-composer-textarea"]', "New Card");
-    this.wait(1000);
+  setCardTitle(cardName) {
+    this.typeTextonDom("#board div[class='list-card js-composer'] textarea", cardName);
   }
   clickOnAddCardButton() {
-    this.clickOnDomElement('input[value="Add card"]');
-    this.wait(1000);
+    this.clickOnDomElement("input[value='Add card']");
   }
-  clickOnCancelCardIcon() {
-    this.clickOnDomElement('div[class="cc-controls-section"] > a[href="#"]');
-    this.wait(1000);
-  }
-  dragAndDropNewCard() {
-    this.dragAndDropElement('div > a[data-testid="trello-card"]', 'div#board>div:nth-of-type(5)>div>div:nth-of-type(2)');
-    this.wait(1000);
-  }
-  clickOnOpenMemberMenu() {
-    this.clickOnDomElement('[aria-label="Open member menu"]');
-    this.wait(1000);
+  clickOnProfileButton() {
+    this.clickOnDomElement("button[data-testid='header-member-menu-button']");
+    cy.wait(2000);
   }
   clickOnLogOutOption() {
-    this.clickOnDomElement('[data-testid="account-menu-logout-section"]');
-    this.wait(1000);
+    this.clickOnDomElement("button[data-testid='account-menu-logout']");
   }
   clickOnLogOutButton() {
-    this.clickOnDomElement('[id="logout-submit"]')
+    this.clickOnId("logout-submit");
   }
-  dragAndDropTheCard() {
-    cy.get('div[data-list-index="0"] .list-card').trigger('mousedown', { which: 1 })
-          .trigger('mousemove', { clientX: 600, clientY: 0 })
-          .trigger('mouseup');
+  dragAndDropTheCard(item, target) {
+    cy.get(item).drag(target, {force: true});
+    cy.wait(2000);
   }
   getCardCoordinates() {
-    this.getElementCoordinate('div[data-list-index="1"] .list-card');
+    this.getElementCoordinate("div[class='list-card-details js-card-details']");
+  }
+  clickOnCloseAddList() {
+    this.clickOnDomElement('div>a[aria-label="Cancel list editing"]');
+    cy.wait(2000);
+  }
+  clickOnCloseAddCard() {
+    this.clickOnDomElement('div[class="cc-controls-section"] > a[href="#"]');
+    cy.wait(2000);
+  }
+  clickOnBoard(name) {
+    this.clickOnDomElementWithXpath(`//a[.='${name}']`)
+  }
+  clickOnMenuOption() {
+    this.clickOnDomElement('button[aria-label="Show menu"]');
+  }
+  clickOnCloseBoardOption() {
+    this.clickOnDomElement('span.icon-sm.icon-remove');
+  }
+  clickOnCloseButton() {
+    this.clickOnDomElement('input[value="Close"]');
+  }
+  clickOnPermanentlyDeleteBoard() {
+    this.clickOnDomElement("button[data-testid='close-board-delete-board-button']");
+  }
+  clickOnConfirmDeleteBoard() {
+    this.clickOnDomElement("button[data-testid='close-board-delete-board-confirm-button']");
   }
 }
 export class TestDependencies extends BaseDependencies {}
+
+export class Locator {
+  cardFrom = "div > a > div[class='list-card-cover js-card-cover']";
+  cardTo = "div > a > span[class='js-add-a-card']";
+}
