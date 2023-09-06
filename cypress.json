@@ -8,8 +8,6 @@
     "requestTimeout": 30000,
     "defaultCommandTimeout": 50000,
     "baseUrl": "https://trello.com/",
-    "userEmail": "arghajitsingha47@gmail.com",
-    "password": "ArghajitTesting123",
     "reporter": "cypress-mochawesome-reporter",
     "reporterOptions": {
     "reportDir": "cypress/Report",
@@ -17,6 +15,7 @@
     "reportPageTitle": "Testing-Result"
   },
   "testFiles": [
+    "clearStorage.spec.js",
     "test.spec.js",
     "cleanUp.spec.js"
   ]

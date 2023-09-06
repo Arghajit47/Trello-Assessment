@@ -1,7 +1,7 @@
 const properties = {
     baseUrl: Cypress.config().baseUrl,
-    userEmail: Cypress.config().userEmail,
-    password: Cypress.config().password
+    userEmail: Cypress.env("USEREMAIL") || "",
+    password: Cypress.env("PASSWORD") || ""
   };
   
   export default properties;

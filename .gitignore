@@ -3,3 +3,5 @@ cypress/Report
 package-lock.json
 cypress/fixtures/*
 cypress/integration/APITesting.spec.js
+cypress/screenshots
+cypress.env.json

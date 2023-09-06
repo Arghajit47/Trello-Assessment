@@ -1,0 +1,29 @@
+name: Trello-Assignment
+on:
+  push:
+    branches:
+      - CypressJS
+  pull_request:
+    types: [opened, closed]
+    branches:
+      - CypressJS
+jobs:
+  build:
+    env:
+      CYPRESS_USEREMAIL: secrets.USEREMAIL
+      CYPRESS_PASSWORD: secrets.PASSWORD
+    name: Build, Run Automation Testcases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Run Automation Testcases
+        run: 'ci-scripts/trello.sh'
+      - name: Archive test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: |
+            cypress/Report
